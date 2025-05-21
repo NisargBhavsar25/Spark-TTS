@@ -21,6 +21,7 @@ import soundfile as sf
 import logging
 from datetime import datetime
 import platform
+import time
 
 from cli.SparkTTS import SparkTTS
 
@@ -92,6 +93,8 @@ def run_tts(args):
 
     logging.info("Starting inference...")
 
+    start_time = time.time()
+
     # Perform inference and save the output audio
     with torch.no_grad():
         wav = model.inference(
@@ -102,9 +105,20 @@ def run_tts(args):
             pitch=args.pitch,
             speed=args.speed,
         )
-        sf.write(save_path, wav, samplerate=16000)
+
+        # End timing for RTF calculation
+    end_time = time.time()
+    
+    # Calculate RTF
+    audio_duration = len(wav) / 16000  # seconds (assuming 16kHz sample rate)
+    processing_time = end_time - start_time
+    rtf = processing_time / audio_duration if audio_duration > 0 else float('inf')    
+    
+    sf.write(save_path, wav, samplerate=16000)
 
     logging.info(f"Audio saved at: {save_path}")
+    logging.info(f"RTF: {rtf:.4f}")
+    logging.info(f"Processing time: {processing_time:.4f} seconds for {audio_duration:.4f} seconds of audio")
 
 
 if __name__ == "__main__":
