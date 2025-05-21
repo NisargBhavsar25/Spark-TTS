@@ -119,6 +119,8 @@ def run_tts(args):
     logging.info(f"Audio saved at: {save_path}")
     logging.info(f"RTF: {rtf:.4f}")
     logging.info(f"Processing time: {processing_time:.4f} seconds for {audio_duration:.4f} seconds of audio")
+    print(f"RTF: {rtf:.4f}")
+    print(f"Processing time: {processing_time:.4f} seconds for {audio_duration:.4f} seconds of audio")
 
 
 if __name__ == "__main__":
